@@ -58,6 +58,20 @@ export const LeafletMap: React.FC = () => {
                 {markers.map((unit, idx) => (
                     <Marker
                         key={`marker-${unit.finnkode}`}
+                        eventHandlers={{
+                            click: (e) => {
+                                // collect bids from meglers
+                              const newData = messageHistory.filter(
+                                (bid: any) => {
+                                    return bid.tlfnr == unit.megler.phone;
+                                }
+                            )
+                            const History = newData.map((item:any) => item.bud + ' kr');
+                            // alert price history
+                            alert('New Bid(s) is(are):' + "\n" + History);
+
+                            },
+                          }}
                         position={[Number(unit.lat), Number(unit.lng)]}
                         icon={
                             new Icon({
@@ -68,9 +82,9 @@ export const LeafletMap: React.FC = () => {
                         }
                     >
                         <Popup>
-                            <span>
-                                En fin bolig verdt ca {unit?.Totalpris}{" "}
-                            </span>
+                            <div>
+                                En fin bolig verdt ca {unit?.Totalpris}{" kr"}  
+                            </div>
                         </Popup>
                     </Marker>
                 ))}

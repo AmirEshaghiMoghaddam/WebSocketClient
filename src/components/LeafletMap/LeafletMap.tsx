@@ -11,7 +11,8 @@ const zoom: number = 12;
 
 export const LeafletMap: React.FC = () => {
     const [socketUrl, setSocketUrl] = useState(
-        /* Insert websocket address here in order to connect */ ""
+        /* Insert websocket address here in order to connect */ 
+        
     );
     const [messageHistory, setMessageHistory] = useState([]);
     const { sendMessage, lastMessage, readyState } = useWebSocket(socketUrl);

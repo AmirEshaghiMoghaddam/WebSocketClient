@@ -12,7 +12,7 @@ const zoom: number = 12;
 export const LeafletMap: React.FC = () => {
     const [socketUrl, setSocketUrl] = useState(
         /* Insert websocket address here in order to connect */ 
-        
+        "ws://localhost:8080/"
     );
     const [messageHistory, setMessageHistory] = useState([]);
     const { sendMessage, lastMessage, readyState } = useWebSocket(socketUrl);
@@ -20,6 +20,7 @@ export const LeafletMap: React.FC = () => {
     useEffect(() => {
         if (lastMessage !== null) {
             setMessageHistory((prev) => prev.concat(lastMessage?.data));
+            // Confirm data is received by the client from over the Web Socket
             console.log(lastMessage?.data);
         }
     }, [lastMessage, setMessageHistory]);

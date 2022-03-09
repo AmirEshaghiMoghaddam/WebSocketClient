@@ -4,6 +4,8 @@ import useWebSocket, { ReadyState } from "react-use-websocket";
 import { LatLngTuple, Icon } from "leaflet";
 import "leaflet/dist/leaflet.css";
 import markerIconPng from "leaflet/dist/images/marker-icon.png";
+// importing red location icon for distinction
+import markerNewIconPng from "./../../Assets/Icons/NewMarker.png";
 import markers from "./listings.json";
 
 const defaultLatLng: LatLngTuple = [59.955572, 10.783523];
@@ -19,11 +21,26 @@ export const LeafletMap: React.FC = () => {
 
     useEffect(() => {
         if (lastMessage !== null) {
-            setMessageHistory((prev) => prev.concat(lastMessage?.data));
+            setMessageHistory((prev) => prev.concat(JSON.parse(lastMessage?.data)));
             // Confirm data is received by the client from over the Web Socket
             console.log(lastMessage?.data);
         }
     }, [lastMessage, setMessageHistory]);
+
+    // Visually indicate on the map any relevant data received from the Web Socket server
+    // the icon becomes red when new data received
+    const getMarker = (tlfnr: any): any => {
+        const newData = messageHistory.findIndex(
+            (bid: any) => {
+                return bid.tlfnr == tlfnr;
+            }
+        )
+        if (newData >= 0){
+            return markerNewIconPng;
+        }
+        else
+            return markerIconPng;
+    }    
 
     return (
         <div className="w-100">
@@ -44,8 +61,8 @@ export const LeafletMap: React.FC = () => {
                         position={[Number(unit.lat), Number(unit.lng)]}
                         icon={
                             new Icon({
-                                iconUrl: markerIconPng,
-                                iconSize: [25, 41],
+                                iconUrl: getMarker(unit.megler.phone),
+                                iconSize: [20, 30],
                                 iconAnchor: [12, 41],
                             })
                         }
